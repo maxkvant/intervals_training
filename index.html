@@ -1,0 +1,74 @@
+<html>
+    <head>
+    <script src="http://www.keithwhor.com/music/audiosynth.js"></script>
+    <script>
+        var piano = Synth.createInstrument('acoustic');
+        var tim = 0.5;
+        arr = []
+        function f() {
+            if (arr.length > 0) {
+                setTimeout(f, tim * 1000);
+                cur =  arr.shift();
+                piano.play(cur[0], cur[1], tim); 
+            }
+        }
+        notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+        function getNote(x) {
+            oct = Math.floor(x / notes.length + 0.1)
+            return [notes[x % notes.length], oct]
+        }
+        function randInt(mn, mx) {
+            return Math.floor(Math.random() * (mx - mn + 1)) + mn;
+        }
+        function randEl(arr) {
+            return arr[randInt(0, arr.length - 1)];
+        }
+        var C4 = 48;
+        var delta = 0;
+        var resEl;
+        var ansEl;
+        var deltaEl;
+        var detlaArr;
+        function playInt() {
+            deltaArr = deltaEl.value.split(" ");
+            for (i = 0; i < deltaArr.length; i++) {
+                deltaArr[i] = parseInt(deltaArr[i]);
+            }            
+            delta = randEl(deltaArr);
+            console.log(deltaArr);
+            arr = [getNote(C4), getNote(C4 + delta)]
+            f();
+            resEl.innerHTML = "";
+        }
+        function showAns() {
+            delta = delta + '';
+            if (delta == ansEl.value) {
+                resEl.innerHTML = 'ok. ';
+            } else {
+                resEl.innerHTML = 'wa. '; 
+            }
+            note1 = C4;
+            note2 = (C4 + parseInt(delta));
+            resEl.innerHTML += delta + ' | ' +  getNote(note1)[0] + ' - ' + getNote(note2)[0];
+        }
+    </script>
+    </head>
+    <body>
+        <button onclick="playInt()">play</button>
+        <button onclick="showAns()">show ans</button>	
+        </br>
+        <textarea id="delta"></textarea>
+        </br>
+        <textarea id="ans"></textarea>
+        </br>
+        <div id="res">
+            ok
+        </div>
+    </body>
+    <script>
+        ansEl = document.getElementById('ans');
+        resEl = document.getElementById('res');
+        deltaEl = document.getElementById('delta');
+        deltaEl.value = "-3 3 8 -8"
+    </script>
+</html>
